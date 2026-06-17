@@ -1,0 +1,43 @@
+<component name="libraryTable">
+  <library name="api-0.36.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/api-0.36.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-ai-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-alert-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-band-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-bg-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-calib-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-cnd-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-cvt-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-dc-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-eb-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-ec-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-fmt-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-ft-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-htcc-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-ltcc-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-mc-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-mltn-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-mu-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-raster-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-recoil-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-rich-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-rtpc-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-swaps-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-tof-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-uber-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-urwt-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/clas12detector-vtx-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/model-zoo-0.36.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/pytorch-engine-0.36.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/pytorch-jni-2.7.1-0.36.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/pytorch-model-zoo-0.36.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/services/pytorch-native-cpu-2.7.1-linux-x86_64.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/clas/coat-libs-14.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib/utils/jclara-4.3.jar!/" />
+      <root url="file://$USER_HOME$/clas12_offline_software/coatjava-14.1.0/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
