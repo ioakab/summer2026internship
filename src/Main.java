@@ -10,165 +10,200 @@ import org.jlab.groot.math.F1D;
 import org.jlab.groot.fitter.DataFitter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.io.File;
 
 void main() {
 
-    // -------------------------------------------------
-    // Open HIPO file
-    // -------------------------------------------------
-    HipoReader reader = new HipoReader();
-    reader.open("input.hipo");   // Replace with your file name
+    // =================================================
+    // Directory containing HIPO files
+    // =================================================
+    String directoryPath = "/path/to/your/hipo/files"; // CHANGE THIS
 
-    Event event = new Event();
-    SchemaFactory factory = reader.getSchemaFactory();
-    Bank particles = new Bank(factory.getSchema("REC::Particle"));
+    File folder = new File(directoryPath);
 
-    // -------------------------------------------------
+    File[] hipoFiles = folder.listFiles(
+            (dir, name) -> name.endsWith(".hipo"));
+
+    if (hipoFiles == null || hipoFiles.length == 0) {
+        System.out.println("No HIPO files found.");
+        return;
+    }
+
+    Arrays.sort(hipoFiles);
+
+    // =================================================
     // Histograms
-    // -------------------------------------------------
+    // =================================================
 
-    // Gamma-Gamma invariant mass (pi0)
-    H1F hPi0 = new H1F("hPi0",
+    // γγ invariant mass histogram (π0)
+    H1F hPi0 = new H1F(
+            "hPi0",
             "Invariant Mass of Two Photons",
             100, 0.0, 0.30);
 
     hPi0.setTitleX("M(#gamma#gamma) [GeV]");
     hPi0.setTitleY("Counts");
 
-    // Omega invariant mass
-    H1F hOmega = new H1F("hOmega",
+    // ω invariant mass histogram
+    H1F hOmega = new H1F(
+            "hOmega",
             "#omega #rightarrow #pi^{+}#pi^{-}#pi^{0}",
             100, 0.50, 1.10);
 
     hOmega.setTitleX("M(#pi^{+}#pi^{-}#pi^{0}) [GeV]");
     hOmega.setTitleY("Counts");
 
-    // -------------------------------------------------
-    // Event Loop
-    // -------------------------------------------------
-    while (reader.hasNext()) {
+    // =================================================
+    // Loop over all HIPO files
+    // =================================================
+    for (File file : hipoFiles) {
 
-        reader.nextEvent(event);
-        event.read(particles);
+        System.out.println("Processing file: "
+                + file.getName());
 
-        int n = particles.getRows();
-        if (n == 0) continue;
+        HipoReader reader = new HipoReader();
+        reader.open(file.getAbsolutePath());
 
-        // ---------------------------------------------
-        // Particle lists
-        // ---------------------------------------------
-        ArrayList<Integer> gammas = new ArrayList<>();
-        ArrayList<Integer> pips = new ArrayList<>();
-        ArrayList<Integer> pims = new ArrayList<>();
-        ArrayList<Integer> electrons = new ArrayList<>();
+        Event event = new Event();
+        SchemaFactory factory = reader.getSchemaFactory();
+        Bank particles =
+                new Bank(factory.getSchema("REC::Particle"));
 
-        for (int i = 0; i < n; i++) {
+        // =============================================
+        // Event loop
+        // =============================================
+        while (reader.hasNext()) {
 
-            int pid = particles.getInt("pid", i);
+            reader.nextEvent(event);
+            event.read(particles);
 
-            if (pid == 22) gammas.add(i);      // photon
-            if (pid == 211) pips.add(i);       // pi+
-            if (pid == -211) pims.add(i);      // pi-
-            if (pid == 11) electrons.add(i);   // electron
-        }
+            int n = particles.getRows();
+            if (n == 0) continue;
 
-        // ------------------------------------------------
-        // Require final state:
-        // e + pi+ + pi- + 2 gamma
-        // ------------------------------------------------
-        if (gammas.size() < 2) continue;
-        if (pips.size() < 1) continue;
-        if (pims.size() < 1) continue;
-        if (electrons.size() < 1) continue;
+            ArrayList<Integer> gammas = new ArrayList<>();
+            ArrayList<Integer> pips = new ArrayList<>();
+            ArrayList<Integer> pims = new ArrayList<>();
+            ArrayList<Integer> electrons = new ArrayList<>();
 
-        // ------------------------------------------------
-        // Loop over all gamma-gamma combinations
-        // ------------------------------------------------
-        for (int i = 0; i < gammas.size(); i++) {
+            // =========================================
+            // Particle selection
+            // =========================================
+            for (int i = 0; i < n; i++) {
 
-            for (int j = i + 1; j < gammas.size(); j++) {
+                int pid = particles.getInt("pid", i);
 
-                LorentzVector g1 =
-                        getVector(particles, gammas.get(i));
+                if (pid == 22) gammas.add(i);     // photon
+                if (pid == 211) pips.add(i);      // pi+
+                if (pid == -211) pims.add(i);     // pi-
+                if (pid == 11) electrons.add(i);  // electron
+            }
 
-                LorentzVector g2 =
-                        getVector(particles, gammas.get(j));
+            // Require:
+            // e + pi+ + pi- + 2 gammas
+            if (gammas.size() < 2) continue;
+            if (pips.size() < 1) continue;
+            if (pims.size() < 1) continue;
+            if (electrons.size() < 1) continue;
 
-                // Construct pi0 candidate
-                LorentzVector pi0 = new LorentzVector();
-                pi0.add(g1);
-                pi0.add(g2);
+            // =========================================
+            // Loop over all gamma-gamma pairs
+            // =========================================
+            for (int i = 0; i < gammas.size(); i++) {
 
-                double mpi0 = pi0.mass();
+                for (int j = i + 1; j < gammas.size(); j++) {
 
-                // Fill gamma-gamma histogram
-                hPi0.fill(mpi0);
+                    LorentzVector g1 =
+                            getVector(particles,
+                                    gammas.get(i));
 
-                // ------------------------------------------------
-                // Pi0 mass cut
-                // ------------------------------------------------
-                if (mpi0 < 0.115 || mpi0 > 0.155)
-                    continue;
+                    LorentzVector g2 =
+                            getVector(particles,
+                                    gammas.get(j));
 
-                // ------------------------------------------------
-                // Build omega from pi+, pi-, pi0
-                // ------------------------------------------------
-                for (int ip = 0; ip < pips.size(); ip++) {
+                    // Build pi0 candidate
+                    LorentzVector pi0 =
+                            new LorentzVector();
 
-                    for (int im = 0; im < pims.size(); im++) {
+                    pi0.add(g1);
+                    pi0.add(g2);
 
-                        LorentzVector pip =
-                                getVector(particles, pips.get(ip));
+                    double mpi0 = pi0.mass();
 
-                        LorentzVector pim =
-                                getVector(particles, pims.get(im));
+                    // Fill gamma-gamma histogram
+                    hPi0.fill(mpi0);
 
-                        LorentzVector omega =
-                                new LorentzVector();
+                    // =================================
+                    // Pi0 mass cut
+                    // =================================
+                    if (mpi0 < 0.115 || mpi0 > 0.155)
+                        continue;
 
-                        omega.add(pip);
-                        omega.add(pim);
-                        omega.add(pi0);
+                    // =================================
+                    // Build omega candidate
+                    // =================================
+                    for (int ip = 0; ip < pips.size(); ip++) {
 
-                        hOmega.fill(omega.mass());
+                        for (int im = 0; im < pims.size(); im++) {
+
+                            LorentzVector pip =
+                                    getVector(particles,
+                                            pips.get(ip));
+
+                            LorentzVector pim =
+                                    getVector(particles,
+                                            pims.get(im));
+
+                            LorentzVector omega =
+                                    new LorentzVector();
+
+                            omega.add(pip);
+                            omega.add(pim);
+                            omega.add(pi0);
+
+                            hOmega.fill(omega.mass());
+                        }
                     }
                 }
             }
         }
+
+        reader.close();
     }
 
-    reader.close();
-
-    // -------------------------------------------------
-    // Fit pi0 histogram
-    // -------------------------------------------------
+    // =================================================
+    // Fit π0 histogram with Gaussian
+    // =================================================
     F1D fPi0 = new F1D(
             "fPi0",
             "[amp]*gaus(x,[mean],[sigma])",
             0.10, 0.17);
 
-    fPi0.setParameter(0, 1000);
+    fPi0.setParameter(0, hPi0.getMax());
     fPi0.setParameter(1, 0.135);
     fPi0.setParameter(2, 0.01);
 
     DataFitter.fit(fPi0, hPi0, "Q");
 
     System.out.println("\n===== PI0 FIT RESULTS =====");
-    System.out.println("Mean  = " +
-            fPi0.getParameter(1) + " GeV");
+    System.out.println("Mean  = "
+            + fPi0.getParameter(1) + " GeV");
 
-    System.out.println("Sigma = " +
-            fPi0.getParameter(2) + " GeV");
+    System.out.println("Sigma = "
+            + fPi0.getParameter(2) + " GeV");
 
-    // -------------------------------------------------
-    // Draw Histograms
-    // -------------------------------------------------
+    // =================================================
+    // Draw histograms
+    // =================================================
+
     TCanvas c1 = new TCanvas("Pi0", 800, 600);
     c1.draw(hPi0);
     c1.draw(fPi0, "same");
 
     TCanvas c2 = new TCanvas("Omega", 800, 600);
     c2.draw(hOmega);
+
+    System.out.println("\nAnalysis complete.");
 }
 
 
