@@ -18,7 +18,7 @@ void main() {
     // =================================================
     // Directory containing HIPO files
     // =================================================
-    String directoryPath = "/path/to/your/hipo/files"; // CHANGE THIS
+    String directoryPath = "/home/teo/Documents/HipoFold"; // CHANGE THIS
 
     File folder = new File(directoryPath);
 
@@ -248,7 +248,7 @@ public static LorentzVector getVector(Bank b, int row) {
     double energy = Math.sqrt(p2 + mass*mass);
 
     LorentzVector v = new LorentzVector();
-    v.setPxPyPzE(px, py, pz, e);
+    v.setPxPyPzM(px, py, pz, mass);
 
     return v;
 }
