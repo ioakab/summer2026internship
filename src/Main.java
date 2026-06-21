@@ -18,7 +18,7 @@ void main() {
     // =================================================
     // Directory containing HIPO files
     // =================================================
-    String directoryPath = "/path/to/your/hipo/files"; // CHANGE THIS
+    String directoryPath = "/home/teo/Documents/HipoFold"; // CHANGE THIS
 
     File folder = new File(directoryPath);
 
@@ -215,10 +215,40 @@ public static LorentzVector getVector(Bank b, int row) {
     double px = b.getFloat("px", row);
     double py = b.getFloat("py", row);
     double pz = b.getFloat("pz", row);
-    double e  = b.getFloat("energy", row);
+
+    int pid = b.getInt("pid", row);
+
+    // Particle masses in GeV
+    double mass = 0.0;
+
+    switch(pid) {
+        case 11:    // electron
+        case -11:
+            mass = 0.000511;
+            break;
+
+        case 211:   // pi+
+        case -211:  // pi-
+            mass = 0.13957;
+            break;
+
+        case 2212:  // proton
+            mass = 0.93827;
+            break;
+
+        case 22:    // photon
+            mass = 0.0;
+            break;
+
+        default:
+            mass = 0.0;
+    }
+
+    double p2 = px*px + py*py + pz*pz;
+    double energy = Math.sqrt(p2 + mass*mass);
 
     LorentzVector v = new LorentzVector();
-    v.setPxPyPzE(px, py, pz, e);
+    v.setPxPyPzM(px, py, pz, mass);
 
     return v;
 }
