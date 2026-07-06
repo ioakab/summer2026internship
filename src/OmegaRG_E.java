@@ -4,13 +4,15 @@ import org.jlab.jnp.hipo4.data.Bank;
 import org.jlab.jnp.hipo4.data.Event;
 import org.jlab.jnp.hipo4.data.SchemaFactory;
 
-import org.jlab.groot.data.H1F;
-import org.jlab.groot.ui.TCanvas;
 import org.jlab.groot.math.F1D;
 import org.jlab.groot.fitter.DataFitter;
 
 import java.io.File;
 import java.util.ArrayList;
+
+// NOTE: KinematicsUtils, Histograms, and Plotting are all in this same
+// default (unnamed) package, so they're visible here with no import
+// needed - just call them as KinematicsUtils.getVector(...), etc.
 
 public class OmegaRG_E {
 
@@ -33,44 +35,8 @@ public class OmegaRG_E {
             return;
         }
 
-        // =========================
-        // HISTOGRAMS - physics
-        // =========================
-        H1F hPi0   = new H1F("hPi0", "M(#gamma#gamma)", 120, 0.0, 0.30);
-        H1F hOmega = new H1F("hOmega", "M(#pi^{+}#pi^{-}#pi^{0})", 120, 0.5, 1.0);
-
-        // DIS kinematics
-        H1F hQ2 = new H1F("hQ2", "Q^{2}", 100, 0.0, 5.0);
-        H1F hW  = new H1F("hW", "W", 100, 1.0, 3.0);
-        H1F hy  = new H1F("hy", "y", 100, 0.0, 1.0);
-
-        // Multiplicities (filled BEFORE the exact-topology cut, so you can
-        // see the raw distribution of how many of each particle show up)
-        H1F hNGamma = new H1F("hNGamma", "N(#gamma) per event", 10, 0, 10);
-        H1F hNPip   = new H1F("hNPip",   "N(#pi^{+}) per event", 10, 0, 10);
-        H1F hNPim   = new H1F("hNPim",   "N(#pi^{-}) per event", 10, 0, 10);
-        H1F hNElec  = new H1F("hNElec",  "N(e^{-}) per event", 10, 0, 10);
-
-        // Per-particle kinematics: momentum, theta, phi, vz
-        H1F hElecP  = new H1F("hElecP",  "e^{-} p",     100, 0, EBEAM);
-        H1F hElecTh = new H1F("hElecTh", "e^{-} #theta",100, 0, 50);
-        H1F hElecPh = new H1F("hElecPh", "e^{-} #phi",  100, -180, 180);
-        H1F hElecVz = new H1F("hElecVz", "e^{-} vz",    100, -20, 10);
-
-        H1F hPipP  = new H1F("hPipP",  "#pi^{+} p",     100, 0, EBEAM);
-        H1F hPipTh = new H1F("hPipTh", "#pi^{+} #theta",100, 0, 90);
-        H1F hPipPh = new H1F("hPipPh", "#pi^{+} #phi",  100, -180, 180);
-        H1F hPipVz = new H1F("hPipVz", "#pi^{+} vz",    100, -20, 10);
-
-        H1F hPimP  = new H1F("hPimP",  "#pi^{-} p",     100, 0, EBEAM);
-        H1F hPimTh = new H1F("hPimTh", "#pi^{-} #theta",100, 0, 90);
-        H1F hPimPh = new H1F("hPimPh", "#pi^{-} #phi",  100, -180, 180);
-        H1F hPimVz = new H1F("hPimVz", "#pi^{-} vz",    100, -20, 10);
-
-        H1F hGamP  = new H1F("hGamP",  "#gamma p",     100, 0, EBEAM);
-        H1F hGamTh = new H1F("hGamTh", "#gamma #theta",100, 0, 50);
-        H1F hGamPh = new H1F("hGamPh", "#gamma #phi",  100, -180, 180);
-        H1F hGamVz = new H1F("hGamVz", "#gamma vz",    100, -20, 10);
+        // All histograms now live in the Histograms class - see Histograms.java
+        Histograms h = new Histograms(EBEAM);
 
         // =========================
         // DIAGNOSTIC COUNTERS
@@ -87,6 +53,13 @@ public class OmegaRG_E {
 
         // =========================
         // FILE LOOP
+        //
+        // NOTE: an earlier version of this tried to use a HipoChain to
+        // read all files as one continuous stream. That class's exact
+        // method names (add/close/hasNext/etc.) vary between versions of
+        // the hipo4 library and weren't resolving in this project's jar,
+        // so this uses the confirmed-working HipoReader-per-file pattern
+        // instead: open each file, drain its events, close it, move on.
         // =========================
         for (File file : files) {
 
@@ -138,10 +111,10 @@ public class OmegaRG_E {
 
                 // Multiplicity plots - filled on every event that has a
                 // REC::Particle bank, before any topology cut
-                hNGamma.fill(gammas.size());
-                hNPip.fill(pips.size());
-                hNPim.fill(pims.size());
-                hNElec.fill(electrons.size());
+                h.hNGamma.fill(gammas.size());
+                h.hNPip.fill(pips.size());
+                h.hNPim.fill(pims.size());
+                h.hNElec.fill(electrons.size());
 
                 // =========================
                 // EXACT TOPOLOGY CUT: e-, pi+, pi-, 2 gamma
@@ -163,7 +136,7 @@ public class OmegaRG_E {
                 double maxP = 0;
 
                 for (int i : electrons) {
-                    LorentzVector e = getVector(rec, i);
+                    LorentzVector e = KinematicsUtils.getVector(rec, i);
                     double p = e.p();
                     if (p > maxP) {
                         maxP = p;
@@ -171,7 +144,7 @@ public class OmegaRG_E {
                     }
                 }
 
-                LorentzVector electron = getVector(rec, bestE);
+                LorentzVector electron = KinematicsUtils.getVector(rec, bestE);
                 double vzElectron = rec.getFloat("vz", bestE);
 
                 // =========================
@@ -191,17 +164,19 @@ public class OmegaRG_E {
                 int g1idx = gammas.get(0);
                 int g2idx = gammas.get(1);
 
-                LorentzVector pip = getVector(rec, ip);
-                LorentzVector pim = getVector(rec, im);
-                LorentzVector g1  = getVector(rec, g1idx);
-                LorentzVector g2  = getVector(rec, g2idx);
+                LorentzVector pip = KinematicsUtils.getVector(rec, ip);
+                LorentzVector pim = KinematicsUtils.getVector(rec, im);
+                LorentzVector g1  = KinematicsUtils.getVector(rec, g1idx);
+                LorentzVector g2  = KinematicsUtils.getVector(rec, g2idx);
+
+                double vzPip = rec.getFloat("vz", ip);
 
                 // Fill raw kinematics for every particle in this topology
-                fillKinematics(hElecP, hElecTh, hElecPh, hElecVz, electron, vzElectron);
-                fillKinematics(hPipP, hPipTh, hPipPh, hPipVz, pip, rec.getFloat("vz", ip));
-                fillKinematics(hPimP, hPimTh, hPimPh, hPimVz, pim, rec.getFloat("vz", im));
-                fillKinematics(hGamP, hGamTh, hGamPh, hGamVz, g1, rec.getFloat("vz", g1idx));
-                fillKinematics(hGamP, hGamTh, hGamPh, hGamVz, g2, rec.getFloat("vz", g2idx));
+                KinematicsUtils.fillKinematics(h.hElecP, h.hElecTh, h.hElecPh, h.hElecVz, electron, vzElectron);
+                KinematicsUtils.fillKinematics(h.hPipP, h.hPipTh, h.hPipPh, h.hPipVz, pip, vzPip);
+                KinematicsUtils.fillKinematics(h.hPimP, h.hPimTh, h.hPimPh, h.hPimVz, pim, rec.getFloat("vz", im));
+                KinematicsUtils.fillKinematics(h.hGamP, h.hGamTh, h.hGamPh, h.hGamVz, g1, rec.getFloat("vz", g1idx));
+                KinematicsUtils.fillKinematics(h.hGamP, h.hGamTh, h.hGamPh, h.hGamVz, g2, rec.getFloat("vz", g2idx));
 
                 // =========================
                 // DIS VARIABLES
@@ -213,13 +188,13 @@ public class OmegaRG_E {
                         Math.pow(Math.sin(electron.theta() / 2.0), 2);
 
                 double nu = E - Eprime;
-                double W2 = M_p() * M_p() + 2 * M_p() * nu - Q2;
+                double W2 = KinematicsUtils.M_p() * KinematicsUtils.M_p() + 2 * KinematicsUtils.M_p() * nu - Q2;
                 double W = Math.sqrt(Math.max(W2, 0));
                 double y = nu / E;
 
-                hQ2.fill(Q2);
-                hW.fill(W);
-                hy.fill(y);
+                h.hQ2.fill(Q2);
+                h.hW.fill(W);
+                h.hy.fill(y);
 
                 // DIS CUTS
                 if (Q2 < 1.0) continue;
@@ -229,12 +204,17 @@ public class OmegaRG_E {
                 nPassDIS++;
 
                 // =========================
-                // ANGLE CUT: e- vs each photon
-                // Reject events where either photon is nearly collinear
-                // with the electron (radiative / Moller-like background)
+                // ANGLE: e- vs each photon
+                // Filled BEFORE the cut is applied so you can see the full
+                // distribution (including the collinear peak you're cutting
+                // away), then the cut rejects near-collinear pairs.
                 // =========================
-                double angle1 = angleBetween(electron, g1);
-                double angle2 = angleBetween(electron, g2);
+                double angle1 = KinematicsUtils.angleBetween(electron, g1);
+                double angle2 = KinematicsUtils.angleBetween(electron, g2);
+
+                h.hEGammaAngle.fill(angle1);
+                h.hEGammaAngle.fill(angle2);
+
                 if (angle1 < MIN_EGAMMA_ANGLE) continue;
                 if (angle2 < MIN_EGAMMA_ANGLE) continue;
 
@@ -248,7 +228,7 @@ public class OmegaRG_E {
                 pi0.add(g2);
 
                 double mpi0 = pi0.mass();
-                hPi0.fill(mpi0);
+                h.hPi0.fill(mpi0);
 
                 // pi0 mass window selection
                 if (Math.abs(mpi0 - 0.134) > 0.025) continue;
@@ -265,7 +245,16 @@ public class OmegaRG_E {
 
                 double m = omega.mass();
                 if (m > 0.5 && m < 1.0) {
-                    hOmega.fill(m);
+                    h.hOmega.fill(m);
+
+                    // omega system kinematics (p/theta/phi from the summed
+                    // 4-vector; vz taken from the pi+ track as a proxy, see
+                    // note in Histograms.java).
+                    h.hOmegaP.fill(omega.p());
+                    h.hOmegaTh.fill(Math.toDegrees(omega.theta()));
+                    h.hOmegaPh.fill(Math.toDegrees(omega.phi()));
+                    h.hOmegaVz.fill(vzPip);
+
                     nPassOmega++;
                 }
             }
@@ -292,113 +281,21 @@ public class OmegaRG_E {
         // =========================
         F1D fit = new F1D("fit", "[amp]*gaus(x,[mean],[sigma])", 0.10, 0.17);
 
-        fit.setParameter(0, hPi0.getMax());
+        fit.setParameter(0, h.hPi0.getMax());
         fit.setParameter(1, 0.135);
         fit.setParameter(2, 0.01);
 
-        DataFitter.fit(fit, hPi0, "Q");
+        DataFitter.fit(fit, h.hPi0, "Q");
 
         System.out.println("\n===== pi0 FIT =====");
         System.out.println("Mean  = " + fit.getParameter(1));
         System.out.println("Sigma = " + fit.getParameter(2));
 
         // =========================
-        // PLOTS
+        // PLOTS - see Plotting.java
         // =========================
-        TCanvas c1 = new TCanvas("DIS", 900, 600);
-        c1.divide(2, 2);
-        c1.cd(0); c1.draw(hQ2);
-        c1.cd(1); c1.draw(hW);
-        c1.cd(2); c1.draw(hy);
-        c1.cd(3); c1.draw(hPi0);
-
-        TCanvas c2 = new TCanvas("Omega", 800, 600);
-        c2.draw(hOmega);
-
-        TCanvas c3 = new TCanvas("Multiplicities", 900, 600);
-        c3.divide(2, 2);
-        c3.cd(0); c3.draw(hNElec);
-        c3.cd(1); c3.draw(hNGamma);
-        c3.cd(2); c3.draw(hNPip);
-        c3.cd(3); c3.draw(hNPim);
-
-        TCanvas c4 = new TCanvas("Electron_Kinematics", 900, 600);
-        c4.divide(2, 2);
-        c4.cd(0); c4.draw(hElecP);
-        c4.cd(1); c4.draw(hElecTh);
-        c4.cd(2); c4.draw(hElecPh);
-        c4.cd(3); c4.draw(hElecVz);
-
-        TCanvas c5 = new TCanvas("Pip_Kinematics", 900, 600);
-        c5.divide(2, 2);
-        c5.cd(0); c5.draw(hPipP);
-        c5.cd(1); c5.draw(hPipTh);
-        c5.cd(2); c5.draw(hPipPh);
-        c5.cd(3); c5.draw(hPipVz);
-
-        TCanvas c6 = new TCanvas("Pim_Kinematics", 900, 600);
-        c6.divide(2, 2);
-        c6.cd(0); c6.draw(hPimP);
-        c6.cd(1); c6.draw(hPimTh);
-        c6.cd(2); c6.draw(hPimPh);
-        c6.cd(3); c6.draw(hPimVz);
-
-        TCanvas c7 = new TCanvas("Gamma_Kinematics", 900, 600);
-        c7.divide(2, 2);
-        c7.cd(0); c7.draw(hGamP);
-        c7.cd(1); c7.draw(hGamTh);
-        c7.cd(2); c7.draw(hGamPh);
-        c7.cd(3); c7.draw(hGamVz);
+        Plotting.drawAll(h);
 
         System.out.println("Done.");
-    }
-
-    // =========================
-    // Helper: fill p, theta, phi, vz histograms for one particle
-    // =========================
-    public static void fillKinematics(H1F hP, H1F hTh, H1F hPh, H1F hVz,
-                                      LorentzVector v, double vz) {
-        hP.fill(v.p());
-        hTh.fill(Math.toDegrees(v.theta()));
-        hPh.fill(Math.toDegrees(v.phi()));
-        hVz.fill(vz);
-    }
-
-    // =========================
-    // Helper: opening angle between two particles (radians)
-    // =========================
-    public static double angleBetween(LorentzVector a, LorentzVector b) {
-        return Math.acos(
-                a.vect().dot(b.vect()) / (a.vect().mag() * b.vect().mag())
-        );
-    }
-
-    // =========================
-    // LORENTZ VECTOR BUILDER
-    // =========================
-    public static LorentzVector getVector(Bank b, int row) {
-
-        double px = b.getFloat("px", row);
-        double py = b.getFloat("py", row);
-        double pz = b.getFloat("pz", row);
-
-        int pid = b.getInt("pid", row);
-
-        double mass = switch (pid) {
-            case 22 -> 0.0;
-            case 211, -211 -> 0.13957;
-            case 11 -> 0.000511;
-            default -> 0.0;
-        };
-
-        LorentzVector v = new LorentzVector();
-        v.setPxPyPzM(px, py, pz, mass);
-
-        return v;
-    }
-
-    // proton mass
-    public static double M_p() {
-        return 0.938272;
     }
 }
