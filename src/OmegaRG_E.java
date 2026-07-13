@@ -25,7 +25,7 @@ public class OmegaRG_E {
 
     public static void main(String[] args) {
 
-        String path = "C:\\Users\\mateo\\OneDrive\\Desktop\\summer\\HipoStuff";
+        String path = "/Users/mateobisbal/Desktop/clas12-offline-software/HipoFold";
 
         File folder = new File(path);
         File[] files = folder.listFiles((d, name) -> name.endsWith(".hipo"));
@@ -121,11 +121,7 @@ public class OmegaRG_E {
                 // Matches the hipo-utils filter string "11,211,-211,22,22"
                 // =========================
                 if (electrons.size() >= 1) nHasElectron++;
-
                 if (electrons.size() < 1) continue;
-                if (gammas.size() != 2) continue;
-                if (pips.size() != 1) continue;
-                if (pims.size() != 1) continue;
 
                 nPassTopology++;
 
@@ -159,25 +155,6 @@ public class OmegaRG_E {
 
                 nPassVz++;
 
-                int ip = pips.get(0);
-                int im = pims.get(0);
-                int g1idx = gammas.get(0);
-                int g2idx = gammas.get(1);
-
-                LorentzVector pip = KinematicsUtils.getVector(rec, ip);
-                LorentzVector pim = KinematicsUtils.getVector(rec, im);
-                LorentzVector g1  = KinematicsUtils.getVector(rec, g1idx);
-                LorentzVector g2  = KinematicsUtils.getVector(rec, g2idx);
-
-                double vzPip = rec.getFloat("vz", ip);
-
-                // Fill raw kinematics for every particle in this topology
-                KinematicsUtils.fillKinematics(h.hElecP, h.hElecTh, h.hElecPh, h.hElecVz, electron, vzElectron);
-                KinematicsUtils.fillKinematics(h.hPipP, h.hPipTh, h.hPipPh, h.hPipVz, pip, vzPip);
-                KinematicsUtils.fillKinematics(h.hPimP, h.hPimTh, h.hPimPh, h.hPimVz, pim, rec.getFloat("vz", im));
-                KinematicsUtils.fillKinematics(h.hGamP, h.hGamTh, h.hGamPh, h.hGamVz, g1, rec.getFloat("vz", g1idx));
-                KinematicsUtils.fillKinematics(h.hGamP, h.hGamTh, h.hGamPh, h.hGamVz, g2, rec.getFloat("vz", g2idx));
-
                 // =========================
                 // DIS VARIABLES
                 // =========================
@@ -202,6 +179,31 @@ public class OmegaRG_E {
                 if (y > 0.85) continue;
 
                 nPassDIS++;
+
+
+                if (gammas.size() != 2) continue;
+                if (pips.size() != 1) continue;
+                if (pims.size() != 1) continue;
+
+                int ip = pips.get(0);
+                int im = pims.get(0);
+                int g1idx = gammas.get(0);
+                int g2idx = gammas.get(1);
+
+                LorentzVector pip = KinematicsUtils.getVector(rec, ip);
+                LorentzVector pim = KinematicsUtils.getVector(rec, im);
+                LorentzVector g1  = KinematicsUtils.getVector(rec, g1idx);
+                LorentzVector g2  = KinematicsUtils.getVector(rec, g2idx);
+
+                double vzPip = rec.getFloat("vz", ip);
+
+                // Fill raw kinematics for every particle in this topology
+                KinematicsUtils.fillKinematics(h.hElecP, h.hElecTh, h.hElecPh, h.hElecVz, electron, vzElectron);
+                KinematicsUtils.fillKinematics(h.hPipP, h.hPipTh, h.hPipPh, h.hPipVz, pip, vzPip);
+                KinematicsUtils.fillKinematics(h.hPimP, h.hPimTh, h.hPimPh, h.hPimVz, pim, rec.getFloat("vz", im));
+                KinematicsUtils.fillKinematics(h.hGamP, h.hGamTh, h.hGamPh, h.hGamVz, g1, rec.getFloat("vz", g1idx));
+                KinematicsUtils.fillKinematics(h.hGamP, h.hGamTh, h.hGamPh, h.hGamVz, g2, rec.getFloat("vz", g2idx));
+
 
                 // =========================
                 // ANGLE: e- vs each photon

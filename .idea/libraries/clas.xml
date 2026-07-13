@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="clas">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Desktop/clas12-offline-software/coatjava-14.1.1/lib/clas" />
+      <root url="file://$USER_HOME$/Desktop/clas12-offline-software/coatjava-14.1.1/lib/services" />
+      <root url="file://$USER_HOME$/Desktop/clas12-offline-software/coatjava-14.1.1/lib/utils" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$USER_HOME$/Desktop/clas12-offline-software/coatjava-14.1.1/lib/clas" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Desktop/clas12-offline-software/coatjava-14.1.1/lib/services" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Desktop/clas12-offline-software/coatjava-14.1.1/lib/utils" recursive="false" />
+  </library>
+</component>
