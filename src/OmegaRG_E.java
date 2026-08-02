@@ -101,13 +101,14 @@ public class OmegaRG_E {
                     // NOTE: this assumes status < 0 marks "good" reconstructed
                     // particles per the COATJAVA REC::Particle convention.
                     // Double check this against the CLAS12 note for your pass version.
-                    if (status >= 0) continue;
+                    //if (status >= 0) continue;
 
                     if (pid == 11)   electrons.add(i);
                     if (pid == 22)   gammas.add(i);
                     if (pid == 211)  pips.add(i);
                     if (pid == -211) pims.add(i);
                 }
+                //rec.show();
 
                 // Multiplicity plots - filled on every event that has a
                 // REC::Particle bank, before any topology cut
@@ -116,6 +117,7 @@ public class OmegaRG_E {
                 h.hNPim.fill(pims.size());
                 h.hNElec.fill(electrons.size());
 
+                //System.out.println(gammas.size());
                 // =========================
                 // EXACT TOPOLOGY CUT: e-, pi+, pi-, 2 gamma
                 // Matches the hipo-utils filter string "11,211,-211,22,22"
@@ -123,7 +125,6 @@ public class OmegaRG_E {
                 if (electrons.size() >= 1) nHasElectron++;
                 if (electrons.size() < 1) continue;
 
-                nPassTopology++;
 
                 // =========================
                 // ELECTRON SELECTION (highest momentum)
@@ -184,6 +185,8 @@ public class OmegaRG_E {
                 if (gammas.size() != 2) continue;
                 if (pips.size() != 1) continue;
                 if (pims.size() != 1) continue;
+
+                nPassTopology++;
 
                 int ip = pips.get(0);
                 int im = pims.get(0);

@@ -20,7 +20,7 @@ public class Histograms {
 
         // DIS kinematics
         hQ2 = new H1F("hQ2", "Q^{2}", 100, 0.0, 5.0);
-        hW  = new H1F("hW", "W", 100, 1.0, 3.0);
+        hW  = new H1F("hW", "W", 100, 1.0, 8.0);
         hy  = new H1F("hy", "y", 100, 0.0, 1.0);
 
         // Multiplicities
