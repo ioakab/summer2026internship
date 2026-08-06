@@ -92,7 +92,7 @@ Momentum-axis ranges scale with the beam energy passed into the constructor.
 | Histogram | Range         | Why                                                                                                                           |
 |---|---------------|-------------------------------------------------------------------------------------------------------------------------------|
 | `hPi0` | 0.05–0.20 GeV | subtle bump around 0.12–0.15 GeV on top of background                                                                         |
-| `hOmega` | 0.7–.9 GeV    | matches the fill condition itself (`0.5 < m < 1.0`); the distribution rises all the way to the upper edge with a subtle peak. |
+| `hOmega` | 0–1.2 GeV     | matches the fill condition itself (`0.5 < m < 1.0`); the distribution rises all the way to the upper edge with a subtle peak. |
 | `hQ2` | 0.5–4.5 GeV²  | rises from ~1.0, peaks ~1.75–2.0, tapers by ~4.5                                                                              |
 | `hW` | 1.0–4.5 GeV   | rises from ~1.0, peaks ~4.0, sharp kinematic cutoff near the beam-energy-limited W_max (~4.3)                                 |
 | `hy` | 0.0–1.0       | rises smoothly across nearly the whole axis, peaking ~0.88–0.90                                                               |

@@ -24,7 +24,7 @@ public class Histograms {
         // window is already "the hump" - left as is. If you want to see
         // whether it turns over past 1.0, the fill condition in
         // OmegaRG_E.java (not just this axis) needs to widen too.
-        hOmega = new H1F("hOmega", "M(#pi^{+}#pi^{-}#pi^{0})", 120, 0.7, .9);
+        hOmega = new H1F("hOmega", "M(#pi^{+}#pi^{-}#pi^{0})", 120, 0, 1.2);
 
         // DIS kinematics
         // hQ2 (DIS canvas, top-left): rises from ~1.0, peaks ~1.75-2.0,
@@ -78,7 +78,7 @@ public class Histograms {
         hGamP  = new H1F("hGamP",  "#gamma p",     100, 0, 2.5);
         // theta: rises from ~2, peaks ~12-13, tapers to ~0 by ~38.
         hGamTh = new H1F("hGamTh", "#gamma #theta",100, 2, 38);
-        hGamPh = new H1F("hGamPh", "#gamma #phi",  100, -30, 30);
+        hGamPh = new H1F("hGamPh", "#gamma #phi",  100, -180, 180);
         // vz: sharp peak at ~-7.3, matches the charged-track vz peaks.
         hGamVz = new H1F("hGamVz", "#gamma vz",    100, -13, -6);
 

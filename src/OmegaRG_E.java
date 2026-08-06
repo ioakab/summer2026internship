@@ -21,7 +21,7 @@ public class OmegaRG_E {
 
     // Minimum electron-photon opening angle (radians) to reject
     // collinear bremsstrahlung photons faking a pi0
-    static final double MIN_EGAMMA_ANGLE = 0.02;
+    static final double MIN_EGAMMA_ANGLE = 0.12;
 
     public static void main(String[] args) {
 
