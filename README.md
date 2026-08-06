@@ -89,30 +89,30 @@ Momentum-axis ranges scale with the beam energy passed into the constructor.
 
 **Axis ranges were retuned against real output.** After an initial pass based on generic CLAS12 kinematics, the ranges were re-tuned a second time using actual canvas screenshots from a run of the code, so each histogram's axis now frames where the data actually falls rather than a generic guess:
 
-| Histogram | Range | Why |
-|---|---|---|
-| `hPi0` | 0.05–0.20 GeV | subtle bump around 0.12–0.15 GeV on top of background |
-| `hOmega` | 0.5–1.0 GeV | matches the fill condition itself (`0.5 < m < 1.0`); the distribution rises all the way to the upper edge with **no visible ω peak yet** — see [Known limitations](#known-limitations) |
-| `hQ2` | 0.5–4.5 GeV² | rises from ~1.0, peaks ~1.75–2.0, tapers by ~4.5 |
-| `hW` | 1.0–4.5 GeV | rises from ~1.0, peaks ~4.0, sharp kinematic cutoff near the beam-energy-limited W_max (~4.3) |
-| `hy` | 0.0–1.0 | rises smoothly across nearly the whole axis, peaking ~0.88–0.90 |
-| `hNGamma` | 0–8 (8 bins) | small nonzero tail out to ~7–8 |
-| `hNPip` | 0–5 (5 bins) | |
-| `hNPim` | 0–4 (4 bins) | |
-| `hNElec` | 0–3 (3 bins) | essentially all events have exactly 1 |
-| `hElecP` | 1.5–8.5 GeV | sharp onset ~1.6, tapers to ~0 by ~8.3 |
-| `hElecTh` | 5–32° | peaks ~11–12°, tapers to ~0 by ~32° |
-| `hElecVz` | -13 to -6 | sharp peak at ~-7.3 |
-| `hPipP` / `hPimP` | 0–6 / 0–5 GeV | peak ~0.6–0.8 / ~0.4–0.6, tapering out |
-| `hPipTh` / `hPimTh` | 5–70° | long non-negligible tail out to 90° in the raw data |
-| `hPipVz` / `hPimVz` | -13 to -5 | dominant peak ~-7.5 to -7.7; a smaller secondary bump near -1.5 exists but isn't framed as the "main" peak |
-| `hGamP` | 0–2.5 GeV | sharp peak ~0.1–0.2, tapers to ~0 by ~2.5 |
-| `hGamTh` | 2–38° | peaks ~12–13°, tapers to ~0 by ~38° |
-| `hGamVz` | -13 to -6 | matches the charged-track vz peaks |
-| `hOmegaP` | 0–7 GeV | peaks ~2.5–3, tapers to ~0 by ~7 |
-| `hOmegaTh` | 0–40° | peaks ~15–16°, tapers to ~0 by ~40° |
-| `hOmegaVz` | -13 to -5 | matches π⁺ vz (used as the ω vz proxy) |
-| `hEGammaAngle` | 0–0.7 rad | shows both the near-zero collinear-background spike (removed by `MIN_EGAMMA_ANGLE`) and a broader genuine hump around ~0.5 rad |
+| Histogram | Range         | Why                                                                                                                            |
+|---|---------------|--------------------------------------------------------------------------------------------------------------------------------|
+| `hPi0` | 0.05–0.20 GeV | subtle bump around 0.12–0.15 GeV on top of background                                                                          |
+| `hOmega` | 0.7–.9 GeV    | matches the fill condition itself (`0.5 < m < 1.0`); the distribution rises all the way to the upper edge with.                |
+| `hQ2` | 0.5–4.5 GeV²  | rises from ~1.0, peaks ~1.75–2.0, tapers by ~4.5                                                                               |
+| `hW` | 1.0–4.5 GeV   | rises from ~1.0, peaks ~4.0, sharp kinematic cutoff near the beam-energy-limited W_max (~4.3)                                  |
+| `hy` | 0.0–1.0       | rises smoothly across nearly the whole axis, peaking ~0.88–0.90                                                                |
+| `hNGamma` | 0–8 (8 bins)  | small nonzero tail out to ~7–8                                                                                                 |
+| `hNPip` | 0–5 (5 bins)  |                                                                                                                                |
+| `hNPim` | 0–4 (4 bins)  |                                                                                                                                |
+| `hNElec` | 0–3 (3 bins)  | essentially all events have exactly 1                                                                                          |
+| `hElecP` | 1.5–8.5 GeV   | sharp onset ~1.6, tapers to ~0 by ~8.3                                                                                         |
+| `hElecTh` | 5–32°         | peaks ~11–12°, tapers to ~0 by ~32°                                                                                            |
+| `hElecVz` | -13 to -6     | sharp peak at ~-7.3                                                                                                            |
+| `hPipP` / `hPimP` | 0–6 / 0–5 GeV | peak ~0.6–0.8 / ~0.4–0.6, tapering out                                                                                         |
+| `hPipTh` / `hPimTh` | 5–70°         | long non-negligible tail out to 90° in the raw data                                                                            |
+| `hPipVz` / `hPimVz` | -13 to -5     | dominant peak ~-7.5 to -7.7; a smaller secondary bump near -1.5 exists but isn't framed as the "main" peak                     |
+| `hGamP` | 0–2.5 GeV     | sharp peak ~0.1–0.2, tapers to ~0 by ~2.5                                                                                      |
+| `hGamTh` | 2–38°         | peaks ~12–13°, tapers to ~0 by ~38°                                                                                            |
+| `hGamVz` | -13 to -6     | matches the charged-track vz peaks                                                                                             |
+| `hOmegaP` | 0–7 GeV       | peaks ~2.5–3, tapers to ~0 by ~7                                                                                               |
+| `hOmegaTh` | 0–40°         | peaks ~15–16°, tapers to ~0 by ~40°                                                                                            |
+| `hOmegaVz` | -13 to -5     | matches π⁺ vz (used as the ω vz proxy)                                                                                         |
+| `hEGammaAngle` | 0–0.7 rad     | shows both the near-zero collinear-background spike (removed by `MIN_EGAMMA_ANGLE`) and a broader genuine hump around ~0.5 rad |
 
 All φ histograms (`hElecPh`, `hPipPh`, `hPimPh`, `hGamPh`, `hOmegaPh`) are left at the full -180 to 180° since they cover the whole azimuthal range and show real detector-sector structure worth seeing in full.
 
@@ -144,7 +144,7 @@ All plotting logic lives here, separate from the event loop, so `OmegaRG_E.main(
 
 ## Known limitations / open TODOs
 
-- **No visible ω peak yet.** The ω invariant mass distribution currently rises monotonically to the 1.0 GeV edge of the fill window with no turnover — this looks like combinatorial background dominating, not a resolved resonance. Widening the fill condition in `OmegaRG_E.java` (`if (m > 0.5 && m < 1.0)`) to see if it turns over past 1.0 GeV is a reasonable next step, along with revisiting the upstream cuts (π⁰ window, e⁻–γ angle, DIS cuts) to improve signal-to-background before concluding the ω isn't there.
+- **Visible peak is very subtle** The ω invariant mass distribution currently rises monotonically to the 1.0 GeV edge of the fill window with no turnover — this looks like combinatorial background dominating, not a resolved resonance. Widening the fill condition in `OmegaRG_E.java` (`if (m > 0.5 && m < 1.0)`) to see if it turns over past 1.0 GeV is a reasonable next step, along with revisiting the upstream cuts (π⁰ window, e⁻–γ angle, DIS cuts) to improve signal-to-background before concluding the ω isn't there.
 - **π⁰ peak is subtle.** `hPi0` shows only a small bump over background around 0.12–0.15 GeV rather than a clean peak, which may make the Gaussian fit in `OmegaRG_E.java` unstable — worth checking the fit result (mean/sigma) against the raw histogram shape before trusting it.
 - **e⁻–γ angle has two features, not clearly separated yet.** There's a spike near 0 rad (collinear background, removed by `MIN_EGAMMA_ANGLE = 0.02`) and a separate broad hump around 0.5 rad. It's not yet confirmed which of these — if either cleanly — corresponds to signal vs. background for this dataset.
 - **Vertex cut is single-target only.** The `vz` window (`-13, -7`) currently selects one target. To handle both LD2 and a solid target correctly, look up each file's run number against the "Golden" tab of the RG-E run spreadsheet (column G) and choose the matching vz window per run, instead of hardcoding one window for everything.
