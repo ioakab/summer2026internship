@@ -19,6 +19,12 @@ from `REC::Particle` banks in `.hipo` DST files, applying standard DIS event sel
    - `org.jlab.jnp.hipo4` (`HipoReader`, `Bank`, `Event`, `SchemaFactory`)
    - `org.jlab.groot` (`H1F`, `TCanvas`, `F1D`, `DataFitter`)
 
+## Instructions for using COATJAVA dependencies on IntelliJ IDEA
+    Create a project in IntelliJ -> Download COATJAVA -> on MacOS go to the "File" button at the top left -> click on "Project Structure" -> 
+    in "Project Settings" click "Libraries" -> click the plus sign on top of the following box after the "Project Settings" box -> 
+    select Java and ONLY add the files from the "lib" one by one -> to add the rest of the library folders press the plus sign on top of the last box to the right
+
+
 ## Running
 
 ```bash
